@@ -45,3 +45,4 @@ BodyMetrics BodyMetrics::mergeWith(const BodyMetrics& newer) const
     return result;
 }
 
+
