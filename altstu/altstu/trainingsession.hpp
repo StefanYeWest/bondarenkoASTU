@@ -65,3 +65,4 @@ private:
 
 #endif /* trainingsession_hpp */
 
+

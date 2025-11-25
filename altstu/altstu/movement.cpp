@@ -36,3 +36,4 @@ Movement* Movement::closestAlternative(const std::set<std::string>& withGear) co
     return nullptr;
 }
 
+
