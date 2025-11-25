@@ -1,0 +1,5 @@
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/publish-dll/AltstuLab4
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/publish-dll/AltstuLab4.dll
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/publish-dll/AltstuLab4.deps.json
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/publish-dll/AltstuLab4.runtimeconfig.json
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/publish-dll/AltstuLab4.pdb
