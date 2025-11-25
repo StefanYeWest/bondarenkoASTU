@@ -30,3 +30,4 @@ private:
 
 #endif /* slotspec_hpp */
 
+

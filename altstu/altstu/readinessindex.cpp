@@ -12,3 +12,4 @@ ReadinessIndex::ReadinessIndex(double value)
 {
 }
 
+

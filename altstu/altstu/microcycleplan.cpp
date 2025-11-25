@@ -37,7 +37,7 @@ void MicrocyclePlan::adapt(const ReadinessIndex& readiness)
 {
     double factor = readiness.getValue();
     // Упрощенная адаптация - в реальной реализации здесь изменялись бы объемы/интенсивность
-    std::cout << TAG_FOR_LOG << ": Plan adapted with readiness factor " << factor << std::endl;
+    //std::cout << TAG_FOR_LOG << ": Plan adapted with readiness factor " << factor << std::endl;
 }
 
 std::vector<TrainingSession> MicrocyclePlan::upcoming(int limit) const
@@ -60,4 +60,5 @@ void MicrocyclePlan::addSession(const TrainingSession& session)
 {
     m_sessions.push_back(session);
 }
+
 

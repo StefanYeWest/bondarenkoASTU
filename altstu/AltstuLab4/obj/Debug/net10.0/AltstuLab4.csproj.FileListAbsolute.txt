@@ -1,0 +1,15 @@
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/bin/Debug/net10.0/AltstuLab4
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/bin/Debug/net10.0/AltstuLab4.deps.json
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/bin/Debug/net10.0/AltstuLab4.runtimeconfig.json
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/bin/Debug/net10.0/AltstuLab4.dll
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/bin/Debug/net10.0/AltstuLab4.pdb
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/obj/Debug/net10.0/AltstuLab4.GeneratedMSBuildEditorConfig.editorconfig
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/obj/Debug/net10.0/AltstuLab4.AssemblyInfoInputs.cache
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/obj/Debug/net10.0/AltstuLab4.AssemblyInfo.cs
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/obj/Debug/net10.0/AltstuLab4.csproj.CoreCompileInputs.cache
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/obj/Debug/net10.0/AltstuLab4.sourcelink.json
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/obj/Debug/net10.0/AltstuLab4.dll
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/obj/Debug/net10.0/refint/AltstuLab4.dll
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/obj/Debug/net10.0/AltstuLab4.pdb
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/obj/Debug/net10.0/AltstuLab4.genruntimeconfig.cache
+/Users/stepanswifter/Desktop/altstu/bondarenkoASTU/altstu/AltstuLab4/obj/Debug/net10.0/ref/AltstuLab4.dll

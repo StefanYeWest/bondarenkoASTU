@@ -247,3 +247,4 @@ void demonstrateArrayOfDynamicObjects()
     delete library;
     library = nullptr;
 }
+

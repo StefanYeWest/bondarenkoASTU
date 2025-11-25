@@ -36,3 +36,4 @@ void AthleteAccount::logGoalChange(GoalCode oldGoal, GoalCode newGoal)
               << " to " << static_cast<int>(newGoal) << std::endl;
 }
 
+
