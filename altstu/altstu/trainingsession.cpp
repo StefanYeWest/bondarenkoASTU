@@ -13,14 +13,31 @@ TrainingSession::TrainingSession(const std::string& sessionId, const std::string
 {
 }
 
-TrainingSession::~TrainingSession()
+TrainingSession::TrainingSession(const TrainingSession& other)
+    : m_sessionId(other.m_sessionId),
+      m_plannedAt(other.m_plannedAt),
+      m_title(other.m_title),
+      m_blocks(other.m_blocks),
+      m_state(other.m_state),
+      m_telemetry(other.m_telemetry ? std::make_unique<SessionTelemetry>(*other.m_telemetry) : nullptr)
 {
-    if (m_telemetry != nullptr)
-    {
-        delete m_telemetry;
-        m_telemetry = nullptr;
-    }
 }
+
+TrainingSession& TrainingSession::operator=(const TrainingSession& other)
+{
+    if (this != &other)
+    {
+        m_sessionId = other.m_sessionId;
+        m_plannedAt = other.m_plannedAt;
+        m_title = other.m_title;
+        m_blocks = other.m_blocks;
+        m_state = other.m_state;
+        m_telemetry = other.m_telemetry ? std::make_unique<SessionTelemetry>(*other.m_telemetry) : nullptr;
+    }
+    return *this;
+}
+
+TrainingSession::~TrainingSession() = default;
 
 void TrainingSession::start()
 {
@@ -31,11 +48,7 @@ void TrainingSession::start()
 void TrainingSession::finalize(const SessionTelemetry& telemetry)
 {
     m_state = State::eDone;
-    if (m_telemetry != nullptr)
-    {
-        delete m_telemetry;
-    }
-    m_telemetry = new SessionTelemetry(telemetry);
+    m_telemetry = std::make_unique<SessionTelemetry>(telemetry);
     std::cout << TAG_FOR_LOG << ": Session " << m_sessionId << " finalized" << std::endl;
 }
 
@@ -60,6 +73,21 @@ std::string TrainingSession::stateToString(State state) const
         case State::eMissed: return STATE_MISSED;
         default: return "unknown";
     }
+}
+
+// Дружественная функция для вывода в поток
+std::ostream& operator<<(std::ostream& os, const TrainingSession& session)
+{
+    os << "TrainingSession{id: " << session.m_sessionId 
+       << ", title: " << session.m_title
+       << ", state: " << session.stateToString(session.m_state);
+    if (session.m_telemetry)
+    {
+        os << ", duration: " << session.m_telemetry->getDuration() 
+           << " min, calories: " << session.m_telemetry->getCalories();
+    }
+    os << "}";
+    return os;
 }
 
 

@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include "slotspec.hpp"
 
 class AthleteAccount;
@@ -37,7 +38,7 @@ public:
     ~SessionBlueprint() = default;
     
     bool validateAgainst(const AthleteAccount& athlete) const;
-    TrainingSession* instantiate(const MovementLibrary& library, const AthleteAccount& athlete) const;
+    std::unique_ptr<TrainingSession> instantiate(const MovementLibrary& library, const AthleteAccount& athlete) const;
     
     std::string getBlueprintId() const { return m_blueprintId; }
     std::string getLabel() const { return m_label; }

@@ -11,10 +11,12 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <memory>
+#include "baseentity.hpp"
 
 class AthleteAccount;
 
-class Movement
+class Movement : public BaseEntity
 {
 public:
     using TargetsType = std::set<std::string>;
@@ -26,9 +28,6 @@ public:
     
 private:
     static constexpr const char* TAG_FOR_LOG = "Movement";
-    
-    std::string m_code;
-    std::string m_title;
     TargetsType m_targets;
     GearNeedsType m_gearNeeds;
     std::string m_impact;
@@ -39,13 +38,21 @@ private:
 public:
     Movement() = default;
     Movement(const std::string& code, const std::string& title, const std::string& impact);
-    ~Movement() = default;
+    Movement(const Movement& other); // Конструктор копирования
+    Movement(Movement&& other) noexcept = default;
+    ~Movement() override = default;
+    
+    Movement& operator=(const Movement& other);
+    Movement& operator=(Movement&& other) noexcept = default;
+    
+    // Переопределение виртуального метода
+    std::string getDescription() const override;
     
     bool isDoable(const AthleteAccount& athlete) const;
-    Movement* closestAlternative(const std::set<std::string>& withGear) const;
+    std::shared_ptr<Movement> closestAlternative(const std::set<std::string>& withGear) const;
     
-    std::string getCode() const { return m_code; }
-    std::string getTitle() const { return m_title; }
+    std::string getCode() const { return this->getId(); } // Использование this
+    std::string getTitle() const { return this->getName(); } // Использование this
     std::string getImpact() const { return m_impact; }
     int getDifficultyBand() const { return m_difficultyBand; }
     TargetsType getTargets() const { return m_targets; }

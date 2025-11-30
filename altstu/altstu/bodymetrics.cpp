@@ -14,6 +14,34 @@ BodyMetrics::BodyMetrics(const std::string& athleteId, double weightKg, int stat
     recalculateDerived();
 }
 
+BodyMetrics::BodyMetrics(const BodyMetrics& other)
+    : m_athleteId(other.m_athleteId),
+      m_capturedAt(other.m_capturedAt),
+      m_weightKg(other.m_weightKg),
+      m_statureCm(other.m_statureCm),
+      m_restingHR(other.m_restingHR),
+      m_sleepHours(other.m_sleepHours),
+      m_bmi(other.m_bmi),
+      m_bmrKcal(other.m_bmrKcal)
+{
+}
+
+BodyMetrics& BodyMetrics::operator=(const BodyMetrics& other)
+{
+    if (this != &other)
+    {
+        m_athleteId = other.m_athleteId;
+        m_capturedAt = other.m_capturedAt;
+        m_weightKg = other.m_weightKg;
+        m_statureCm = other.m_statureCm;
+        m_restingHR = other.m_restingHR;
+        m_sleepHours = other.m_sleepHours;
+        m_bmi = other.m_bmi;
+        m_bmrKcal = other.m_bmrKcal;
+    }
+    return *this;
+}
+
 void BodyMetrics::recalculateDerived()
 {
     if (m_statureCm > 0)
@@ -43,6 +71,35 @@ BodyMetrics BodyMetrics::mergeWith(const BodyMetrics& newer) const
     if (!newer.m_sleepHours.has_value()) result.m_sleepHours = m_sleepHours;
     result.recalculateDerived();
     return result;
+}
+
+bool BodyMetrics::operator==(const BodyMetrics& other) const
+{
+    return m_athleteId == other.m_athleteId &&
+           m_weightKg == other.m_weightKg &&
+           m_statureCm == other.m_statureCm &&
+           m_bmi == other.m_bmi &&
+           m_bmrKcal == other.m_bmrKcal;
+}
+
+bool BodyMetrics::operator!=(const BodyMetrics& other) const
+{
+    return !(*this == other);
+}
+
+BodyMetrics BodyMetrics::operator+(const BodyMetrics& other) const
+{
+    return this->mergeWith(other);
+}
+
+std::ostream& operator<<(std::ostream& os, const BodyMetrics& metrics)
+{
+    os << "BodyMetrics{athleteId: " << metrics.m_athleteId
+       << ", weight: " << metrics.m_weightKg << " kg"
+       << ", height: " << metrics.m_statureCm << " cm"
+       << ", BMI: " << metrics.m_bmi
+       << ", BMR: " << metrics.m_bmrKcal << " kcal}";
+    return os;
 }
 
 

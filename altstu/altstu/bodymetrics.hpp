@@ -10,6 +10,7 @@
 
 #include <string>
 #include <optional>
+#include <iostream>
 
 class BodyMetrics
 {
@@ -32,11 +33,22 @@ private:
 public:
     BodyMetrics() = default;
     BodyMetrics(const std::string& athleteId, double weightKg, int statureCm);
+    BodyMetrics(const BodyMetrics& other); // Конструктор копирования
     ~BodyMetrics() = default;
+    
+    BodyMetrics& operator=(const BodyMetrics& other); // Оператор присваивания
     
     void recalculateDerived();
     int tdee(double activityFactor) const;
     BodyMetrics mergeWith(const BodyMetrics& newer) const;
+    
+    // Перегрузка операторов
+    bool operator==(const BodyMetrics& other) const;
+    bool operator!=(const BodyMetrics& other) const;
+    BodyMetrics operator+(const BodyMetrics& other) const; // Объединение метрик
+    
+    // Дружественная функция для вывода
+    friend std::ostream& operator<<(std::ostream& os, const BodyMetrics& metrics);
     
     std::string getAthleteId() const { return m_athleteId; }
     double getWeightKg() const { return m_weightKg; }

@@ -26,9 +26,9 @@ bool SessionBlueprint::validateAgainst(const AthleteAccount& athlete) const
     return hasRequiredGear(athlete);
 }
 
-TrainingSession* SessionBlueprint::instantiate(const MovementLibrary& library, const AthleteAccount& athlete) const
+std::unique_ptr<TrainingSession> SessionBlueprint::instantiate(const MovementLibrary& library, const AthleteAccount& athlete) const
 {
-    TrainingSession* session = new TrainingSession("session_" + m_blueprintId, m_label);
+    auto session = std::make_unique<TrainingSession>("session_" + m_blueprintId, m_label);
     
     for (const auto& slot : m_slots)
     {

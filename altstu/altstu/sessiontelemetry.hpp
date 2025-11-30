@@ -14,6 +14,10 @@ class SessionTelemetry
 {
 public:
     SessionTelemetry() = default;
+    SessionTelemetry(const SessionTelemetry& other) = default;
+    SessionTelemetry(SessionTelemetry&& other) noexcept = default;
+    SessionTelemetry& operator=(const SessionTelemetry& other) = default;
+    SessionTelemetry& operator=(SessionTelemetry&& other) noexcept = default;
     ~SessionTelemetry() = default;
     
     void setDuration(int duration) { m_duration = duration; }
