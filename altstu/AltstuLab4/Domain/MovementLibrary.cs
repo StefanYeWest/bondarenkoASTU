@@ -18,7 +18,14 @@ namespace AltstuLab4.Domain
 
         public void AddMovement(Movement movement)
         {
-            _items.Add(movement);
+            // Использование this и валидация
+            if (movement == null)
+            {
+                throw new ArgumentNullException(nameof(movement));
+            }
+            
+            // Использование this для доступа к приватному полю
+            this._items.Add(movement);
         }
 
         public List<Movement> Find(string text)
