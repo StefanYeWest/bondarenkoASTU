@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AltstuLab4")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+563de89571ac0fa99ab30bc6d6124a1f587bc5ac")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0b760f70726f12ce018b253a504f866ceaf099ff")]
 [assembly: System.Reflection.AssemblyProductAttribute("AltstuLab4")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AltstuLab4")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
