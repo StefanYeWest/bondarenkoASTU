@@ -10,6 +10,7 @@
 #include "athleteaccount.hpp"
 #include <algorithm>
 #include <cctype>
+#include <stdexcept>
 
 MovementLibrary::MovementLibrary(int rev)
     : m_rev(rev)
@@ -19,6 +20,30 @@ MovementLibrary::MovementLibrary(int rev)
 void MovementLibrary::addMovement(const Movement& movement)
 {
     m_items.push_back(movement);
+}
+
+MovementLibrary& MovementLibrary::operator+=(const Movement& movement)
+{
+    m_items.push_back(movement);
+    return *this;
+}
+
+const Movement& MovementLibrary::operator[](size_t index) const
+{
+    if (index >= m_items.size())
+    {
+        throw std::out_of_range("MovementLibrary index out of range");
+    }
+    return m_items[index];
+}
+
+Movement& MovementLibrary::operator[](size_t index)
+{
+    if (index >= m_items.size())
+    {
+        throw std::out_of_range("MovementLibrary index out of range");
+    }
+    return m_items[index];
 }
 
 std::vector<Movement> MovementLibrary::find(const std::string& text) const
@@ -87,6 +112,7 @@ std::vector<Movement> MovementLibrary::rankForSlot(const SlotSpec& slot, const A
 
 bool MovementLibrary::matchesText(const Movement& movement, const std::string& text) const
 {
+    // Демонстрация работы со std::string: поиск, преобразование регистра, конкатенация
     std::string lowerText = text;
     std::transform(lowerText.begin(), lowerText.end(), lowerText.begin(), ::tolower);
     
@@ -96,8 +122,11 @@ bool MovementLibrary::matchesText(const Movement& movement, const std::string& t
     std::string lowerCode = movement.getCode();
     std::transform(lowerCode.begin(), lowerCode.end(), lowerCode.begin(), ::tolower);
     
-    return lowerTitle.find(lowerText) != std::string::npos || 
-           lowerCode.find(lowerText) != std::string::npos;
+    // Использование find для поиска подстроки
+    size_t titlePos = lowerTitle.find(lowerText);
+    size_t codePos = lowerCode.find(lowerText);
+    
+    return titlePos != std::string::npos || codePos != std::string::npos;
 }
 
 

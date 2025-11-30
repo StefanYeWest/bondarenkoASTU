@@ -23,11 +23,10 @@ void MicrocyclePlan::compose(const std::vector<SessionBlueprint>& blueprints, co
     {
         if (blueprint.validateAgainst(athlete))
         {
-            TrainingSession* session = blueprint.instantiate(library, athlete);
+            auto session = blueprint.instantiate(library, athlete);
             if (session != nullptr)
             {
                 m_sessions.push_back(*session);
-                delete session;
             }
         }
     }

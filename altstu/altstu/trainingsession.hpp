@@ -10,6 +10,8 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+#include <iostream>
 #include "workblock.hpp"
 #include "sessiontelemetry.hpp"
 
@@ -41,12 +43,17 @@ private:
     std::string m_title;
     BlocksType m_blocks;
     State m_state;
-    SessionTelemetry* m_telemetry;
+    std::unique_ptr<SessionTelemetry> m_telemetry;
     
 public:
     TrainingSession() = default;
     TrainingSession(const std::string& sessionId, const std::string& title);
+    TrainingSession(const TrainingSession& other);
+    TrainingSession(TrainingSession&& other) noexcept = default;
     ~TrainingSession();
+    
+    TrainingSession& operator=(const TrainingSession& other);
+    TrainingSession& operator=(TrainingSession&& other) noexcept = default;
     
     void start();
     void finalize(const SessionTelemetry& telemetry);
@@ -58,6 +65,9 @@ public:
     BlocksType getBlocks() const { return m_blocks; }
     void addBlock(const WorkBlock& block);
     void setPlannedAt(const std::string& date) { m_plannedAt = date; }
+    
+    // Дружественная функция для вывода в поток
+    friend std::ostream& operator<<(std::ostream& os, const TrainingSession& session);
     
 private:
     std::string stateToString(State state) const;

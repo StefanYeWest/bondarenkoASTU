@@ -39,6 +39,9 @@ public:
     std::vector<Movement> rankForSlot(const SlotSpec& slot, const AthleteAccount& athlete) const;
     
     void addMovement(const Movement& movement);
+    MovementLibrary& operator+=(const Movement& movement); // Добавление движения
+    const Movement& operator[](size_t index) const; // Доступ по индексу
+    Movement& operator[](size_t index);
     ItemsType getItems() const { return m_items; }
     int getRev() const { return m_rev; }
     

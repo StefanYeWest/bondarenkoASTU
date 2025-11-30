@@ -22,6 +22,12 @@ public:
     
     static const int MAX_EXPERIENCE_BAND = 2;
     
+    // Статическое поле - счетчик созданных аккаунтов
+    static int s_accountCount;
+    
+    // Статический метод для получения количества аккаунтов
+    static int getAccountCount() { return s_accountCount; }
+    
 private:
     static constexpr const char* TAG_FOR_LOG = "AthleteAccount";
     
@@ -36,7 +42,8 @@ private:
 public:
     AthleteAccount() = default;
     AthleteAccount(const std::string& accountId, const std::string& displayName, GoalCode primaryGoal);
-    ~AthleteAccount() = default;
+    AthleteAccount(const AthleteAccount& other); // Конструктор копирования
+    ~AthleteAccount();
     
     void updateGoal(GoalCode newGoal);
     void setTimeWindows(const TimeWindowsType& windows);

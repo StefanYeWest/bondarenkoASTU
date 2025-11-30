@@ -9,8 +9,41 @@
 #include "athleteaccount.hpp"
 
 Movement::Movement(const std::string& code, const std::string& title, const std::string& impact)
-    : m_code(code), m_title(title), m_impact(impact), m_difficultyBand(0)
+    : BaseEntity(code, title), // Вызов конструктора базового класса
+      m_impact(impact), m_difficultyBand(0)
 {
+}
+
+Movement::Movement(const Movement& other)
+    : BaseEntity(other), // Вызов конструктора копирования базового класса
+      m_targets(other.m_targets),
+      m_gearNeeds(other.m_gearNeeds),
+      m_impact(other.m_impact),
+      m_difficultyBand(other.m_difficultyBand),
+      m_contraFlags(other.m_contraFlags),
+      m_alternatives(other.m_alternatives)
+{
+}
+
+Movement& Movement::operator=(const Movement& other)
+{
+    if (this != &other)
+    {
+        BaseEntity::operator=(other); // Вызов оператора присваивания базового класса
+        m_targets = other.m_targets;
+        m_gearNeeds = other.m_gearNeeds;
+        m_impact = other.m_impact;
+        m_difficultyBand = other.m_difficultyBand;
+        m_contraFlags = other.m_contraFlags;
+        m_alternatives = other.m_alternatives;
+    }
+    return *this;
+}
+
+std::string Movement::getDescription() const
+{
+    // Использование this для доступа к методам
+    return BaseEntity::getDescription() + " [Impact: " + this->m_impact + ", Band: " + std::to_string(this->m_difficultyBand) + "]";
 }
 
 bool Movement::isDoable(const AthleteAccount& athlete) const
@@ -29,7 +62,7 @@ bool Movement::isDoable(const AthleteAccount& athlete) const
     return true;
 }
 
-Movement* Movement::closestAlternative(const std::set<std::string>& withGear) const
+std::shared_ptr<Movement> Movement::closestAlternative(const std::set<std::string>& withGear) const
 {
     // Упрощенная реализация - возвращаем nullptr
     // В реальной реализации здесь был бы поиск по alternatives
