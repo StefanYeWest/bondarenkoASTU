@@ -1,4 +1,6 @@
 using AltstuLab4.Domain;
+using System;
+using System.IO;
 
 namespace AltstuLab4
 {
@@ -6,17 +8,17 @@ namespace AltstuLab4
     {
         private static void Main()
         {
-            Console.WriteLine("=== Демонстрация работы C# версии лабораторной 4 ===\n");
+            Console.WriteLine("=== Демонстрация работы C# версии лабораторной 5 ===\n");
 
             Console.WriteLine("1. Статическая инициализация объектов:");
             DemonstrateStaticInitialization();
             Console.WriteLine();
 
-            Console.WriteLine("2. Динамическая инициализация объектов (new/delete):");
+            Console.WriteLine("2. Динамическая инициализация объектов:");
             DemonstrateDynamicInitialization();
             Console.WriteLine();
 
-            Console.WriteLine("3. Работа по ссылкам и указателям (references):");
+            Console.WriteLine("3. Работа по ссылкам:");
             DemonstrateReferences();
             Console.WriteLine();
 
@@ -26,6 +28,26 @@ namespace AltstuLab4
 
             Console.WriteLine("5. Массив динамических объектов класса:");
             DemonstrateArrayOfDynamicObjects();
+            Console.WriteLine();
+
+            Console.WriteLine("6. Использование оператора this:");
+            DemonstrateThisOperator();
+            Console.WriteLine();
+
+            Console.WriteLine("7. Статические поля и методы:");
+            DemonstrateStaticMembers();
+            Console.WriteLine();
+
+            Console.WriteLine("8. Свойства с валидацией (get/set):");
+            DemonstrateProperties();
+            Console.WriteLine();
+
+            Console.WriteLine("9. Обработка исключений (try-catch-throw):");
+            DemonstrateExceptionHandling();
+            Console.WriteLine();
+
+            Console.WriteLine("10. Использование using statement (IDisposable):");
+            DemonstrateUsingStatement();
             Console.WriteLine();
         }
 
@@ -172,6 +194,231 @@ namespace AltstuLab4
             Console.WriteLine($"  Библиотека движений создана, версия: {library.Rev}");
             var found = library.Find("жим");
             Console.WriteLine($"  Найдено движений по запросу 'жим': {found.Count}");
+        }
+
+        private static void DemonstrateThisOperator()
+        {
+            // Демонстрация использования this в конструкторах и методах
+            var athlete = new AthleteAccount("acc007", "Тестовый спортсмен", GoalCode.Bulk);
+            
+            Console.WriteLine($"  Создан аккаунт через конструктор с this: {athlete.DisplayName}");
+            Console.WriteLine($"  AccountId (установлен через this): {athlete.AccountId}");
+            
+            // this используется внутри методов класса для явного доступа к полям
+            athlete.AddGear("barbell");
+            athlete.AddGear("dumbbells");
+            
+            Console.WriteLine($"  Инвентарь добавлен через метод с использованием this: {string.Join(", ", athlete.AllowedGear)}");
+            
+            // Демонстрация this в BodyMetrics
+            var metrics = new BodyMetrics("acc007", 75.0, 180);
+            Console.WriteLine($"  Метрики созданы, BMI рассчитан с использованием this: {metrics.Bmi:F2}");
+        }
+
+        private static void DemonstrateStaticMembers()
+        {
+            // Демонстрация статического поля и метода
+            Console.WriteLine($"  Количество созданных аккаунтов (до создания): {AthleteAccount.GetAccountCount()}");
+            
+            var athlete1 = new AthleteAccount("acc008", "Первый спортсмен", GoalCode.Bulk);
+            Console.WriteLine($"  После создания первого: {AthleteAccount.GetAccountCount()}");
+            
+            var athlete2 = new AthleteAccount("acc009", "Второй спортсмен", GoalCode.Cut);
+            Console.WriteLine($"  После создания второго: {AthleteAccount.GetAccountCount()}");
+            
+            // Статический метод можно вызвать без создания экземпляра
+            Console.WriteLine($"  Текущее количество аккаунтов (статический метод): {AthleteAccount.GetAccountCount()}");
+            
+            // Освобождение объектов (счетчик уменьшится в финализаторах)
+            athlete1 = null;
+            athlete2 = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        private static void DemonstrateProperties()
+        {
+            // Демонстрация свойств с get/set и валидацией
+            var athlete = new AthleteAccount("acc010", "Тест свойств", GoalCode.Health);
+            
+            // Установка свойства с валидацией
+            try
+            {
+                athlete.ExperienceBand = 1; // Валидное значение
+                Console.WriteLine($"  ExperienceBand установлен: {athlete.ExperienceBand}");
+                
+                // Попытка установить невалидное значение
+                athlete.ExperienceBand = 5; // Должно выбросить исключение
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"  Валидация свойства сработала: {ex.Message}");
+            }
+            
+            // Демонстрация свойств с автоматической валидацией в BodyMetrics
+            var metrics = new BodyMetrics("acc010", 70.0, 175);
+            Console.WriteLine($"  Исходный вес: {metrics.WeightKg} кг");
+            
+            // Изменение свойства вызывает автоматический пересчет
+            metrics.WeightKg = 72.0;
+            Console.WriteLine($"  Новый вес: {metrics.WeightKg} кг, BMI пересчитан: {metrics.Bmi:F2}");
+            
+            // Попытка установить невалидное значение
+            try
+            {
+                metrics.WeightKg = -10.0; // Должно выбросить исключение
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"  Валидация свойства WeightKg: {ex.Message}");
+            }
+        }
+
+        private static void DemonstrateExceptionHandling()
+        {
+            // Демонстрация try-catch-throw
+            Console.WriteLine("  Демонстрация обработки исключений:");
+            
+            // 1. Try-catch для перехвата исключений
+            try
+            {
+                string? nullId = null;
+                var athlete = new AthleteAccount(nullId!, "Тест", GoalCode.Bulk); // Должно выбросить ArgumentNullException
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine($"    Перехвачено ArgumentNullException: {ex.ParamName}");
+            }
+            
+            // 2. Try-catch для валидации данных
+            try
+            {
+                var metrics = new BodyMetrics("acc011", -10.0, 180); // Невалидный вес
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"    Перехвачено ArgumentOutOfRangeException: {ex.Message}");
+            }
+            
+            // 3. Try-catch-finally
+            AthleteAccount? athlete2 = null;
+            try
+            {
+                athlete2 = new AthleteAccount("acc012", "Тест finally", GoalCode.Bulk);
+                athlete2.ExperienceBand = 10; // Вызовет исключение
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"    В блоке catch: {ex.Message}");
+            }
+            finally
+            {
+                Console.WriteLine("    Блок finally выполнен (очистка ресурсов)");
+            }
+            
+            // 4. Демонстрация throw для создания собственных исключений
+            try
+            {
+                var library = new MovementLibrary(1);
+                Movement? nullMovement = null;
+                library.AddMovement(nullMovement!); // Должно выбросить ArgumentNullException
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine($"    Исключение выброшено в AddMovement: {ex.ParamName}");
+            }
+            
+            // 5. Вложенные try-catch
+            try
+            {
+                try
+                {
+                    var metrics2 = new BodyMetrics("acc013", 0, 0); // Двойная ошибка
+                }
+                catch (ArgumentOutOfRangeException ex) when (ex.ParamName == "weightKg")
+                {
+                    Console.WriteLine($"    Внутренний catch (weightKg): {ex.Message}");
+                    throw; // Повторное выбрасывание исключения
+                }
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"    Внешний catch: {ex.ParamName}");
+            }
+        }
+
+        private static void DemonstrateUsingStatement()
+        {
+            // Демонстрация using statement для автоматического вызова Dispose
+            Console.WriteLine("  Демонстрация using statement:");
+            
+            // 1. Базовое использование using
+            var tempFile = Path.GetTempFileName();
+            try
+            {
+                using (var logger = new MetricsLogger(tempFile))
+                {
+                    var metrics = new BodyMetrics("acc014", 75.0, 180);
+                    logger.LogMetrics(metrics);
+                    logger.LogMessage("Тестовое сообщение");
+                    Console.WriteLine("    Данные записаны в лог (внутри using)");
+                } // Dispose вызывается автоматически здесь
+                
+                Console.WriteLine("    Using блок завершен, ресурсы освобождены");
+                
+                // Проверка, что файл создан
+                if (File.Exists(tempFile))
+                {
+                    var content = File.ReadAllText(tempFile);
+                    Console.WriteLine($"    Содержимое лога ({content.Length} символов) прочитано");
+                }
+            }
+            finally
+            {
+                // Очистка временного файла
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                }
+            }
+            
+            // 2. Using с несколькими ресурсами (C# 8.0+)
+            var tempFile2 = Path.GetTempFileName();
+            {
+                using var logger1 = new MetricsLogger(tempFile2);
+                var metrics1 = new BodyMetrics("acc015", 80.0, 185);
+                logger1.LogMetrics(metrics1);
+                Console.WriteLine("    Using declaration (автоматический Dispose в конце области видимости)");
+            } // Dispose вызывается здесь
+            
+            // 3. Демонстрация, что Dispose действительно вызывается
+            var tempFile3 = Path.GetTempFileName();
+            try
+            {
+                using (var logger = new MetricsLogger(tempFile3))
+                {
+                    logger.LogMessage("Тест 1");
+                    logger.LogMessage("Тест 2");
+                }
+                
+                // Попытка использовать после Dispose должна выбросить исключение
+                var logger2 = new MetricsLogger(tempFile3);
+                logger2.Dispose();
+                
+                try
+                {
+                    logger2.LogMessage("Это должно вызвать исключение");
+                }
+                catch (ObjectDisposedException)
+                {
+                    Console.WriteLine("    ObjectDisposedException перехвачен - ресурс действительно освобожден");
+                }
+            }
+            finally
+            {
+                if (File.Exists(tempFile2)) File.Delete(tempFile2);
+                if (File.Exists(tempFile3)) File.Delete(tempFile3);
+            }
         }
     }
 }

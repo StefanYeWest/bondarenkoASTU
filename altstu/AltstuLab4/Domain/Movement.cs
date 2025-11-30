@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,7 +23,22 @@ namespace AltstuLab4.Domain
         public string Code { get; }
         public string Title { get; }
         public string Impact { get; }
-        public int DifficultyBand { get; set; }
+        
+        // Свойство с валидацией в set
+        private int _difficultyBand;
+        public int DifficultyBand
+        {
+            get => _difficultyBand;
+            set
+            {
+                if (value < 0 || value > MaxDifficultyBand)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value),
+                        $"DifficultyBand must be between 0 and {MaxDifficultyBand}");
+                }
+                _difficultyBand = value;
+            }
+        }
         public IReadOnlyCollection<string> Targets => _targets;
         public IReadOnlyCollection<string> GearNeeds => _gearNeeds;
         public IReadOnlyCollection<string> ContraFlags => _contraFlags;
