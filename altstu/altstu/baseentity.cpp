@@ -32,3 +32,4 @@ std::string BaseEntity::getDescription() const
     return "Entity: " + m_id + " - " + m_name;
 }
 
+
