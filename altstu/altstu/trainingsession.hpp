@@ -50,7 +50,7 @@ public:
     TrainingSession(const std::string& sessionId, const std::string& title);
     TrainingSession(const TrainingSession& other);
     TrainingSession(TrainingSession&& other) noexcept = default;
-    ~TrainingSession();
+    virtual ~TrainingSession(); // Виртуальный деструктор
     
     TrainingSession& operator=(const TrainingSession& other);
     TrainingSession& operator=(TrainingSession&& other) noexcept = default;

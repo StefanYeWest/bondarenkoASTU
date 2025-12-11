@@ -22,6 +22,12 @@
 #include "progressionpolicy.hpp"
 #include "readinessindex.hpp"
 #include "baseentity.hpp"
+#include "exercisable.hpp"
+#include "strengthmovement.hpp"
+#include "cardiomovement.hpp"
+#include "noncopyable.hpp"
+#include "cloneable.hpp"
+#include "advancedsession.hpp"
 
 void demonstrateStaticInitialization();
 void demonstrateSmartPointers();
@@ -32,6 +38,15 @@ void demonstrateOperators();
 void demonstrateCopyConstructors();
 void demonstrateInheritance();
 void demonstrateStringOperations();
+void demonstrateLab6Inheritance();
+void demonstrateProtectedMembers();
+void demonstrateMethodOverriding();
+void demonstrateVirtualFunctions();
+void demonstrateCloning();
+void demonstrateAbstractClass();
+void demonstrateVirtualDestructor();
+void demonstrateNonCopyable();
+void demonstrateDerivedAssignment();
 
 int main(int argc, const char * argv[])
 {
@@ -75,6 +90,44 @@ int main(int argc, const char * argv[])
     
     std::cout << "10. Статические поля и методы:\n";
     std::cout << "  Всего создано аккаунтов: " << AthleteAccount::getAccountCount() << std::endl;
+    std::cout << "\n";
+    
+    std::cout << "=== Лабораторная работа №6 ===\n\n";
+    
+    std::cout << "11. Наследование и производные классы:\n";
+    demonstrateLab6Inheritance();
+    std::cout << "\n";
+    
+    std::cout << "12. Модификатор protected:\n";
+    demonstrateProtectedMembers();
+    std::cout << "\n";
+    
+    std::cout << "13. Перегрузка методов (с вызовом базового и без):\n";
+    demonstrateMethodOverriding();
+    std::cout << "\n";
+    
+    std::cout << "14. Виртуальные функции и полиморфизм:\n";
+    demonstrateVirtualFunctions();
+    std::cout << "\n";
+    
+    std::cout << "15. Клонирование (поверхностное и глубокое):\n";
+    demonstrateCloning();
+    std::cout << "\n";
+    
+    std::cout << "16. Абстрактный класс:\n";
+    demonstrateAbstractClass();
+    std::cout << "\n";
+    
+    std::cout << "17. Виртуальный деструктор:\n";
+    demonstrateVirtualDestructor();
+    std::cout << "\n";
+    
+    std::cout << "18. Запрет конструктора копирования:\n";
+    demonstrateNonCopyable();
+    std::cout << "\n";
+    
+    std::cout << "19. Оператор присваивания производного класса:\n";
+    demonstrateDerivedAssignment();
     std::cout << "\n";
     
     return 0;
@@ -392,5 +445,280 @@ void demonstrateStringOperations()
         std::string number = code.substr(prefix.length());
         std::cout << "  Извлеченный номер из кода: " << number << std::endl;
     }
+}
+
+void demonstrateLab6Inheritance()
+{
+    // Демонстрация производных классов
+    AthleteAccount athlete("acc021", "Тестовый спортсмен", GoalCode::eBulk);
+    athlete.addGear("barbell");
+    
+    StrengthMovement strength("str_001", "Приседания со штангой", 3, 10, 100.0);
+    strength.addGearNeed("barbell");
+    
+    std::cout << "  StrengthMovement создан: " << strength.getTitle() << std::endl;
+    std::cout << "  Код (из базового класса Movement): " << strength.getCode() << std::endl;
+    std::cout << "  Подходы: " << strength.getSets() << ", повторения: " << strength.getReps() << std::endl;
+    
+    CardioMovement cardio("card_001", "Бег", 5.0, 10.0);
+    
+    std::cout << "  CardioMovement создан: " << cardio.getTitle() << std::endl;
+    std::cout << "  Дистанция: " << cardio.getDistanceKm() << " км, скорость: " 
+              << cardio.getSpeedKmh() << " км/ч" << std::endl;
+    std::cout << "  Длительность (из Exercisable): " << cardio.getDuration() << " минут" << std::endl;
+}
+
+void demonstrateProtectedMembers()
+{
+    // Демонстрация использования protected членов
+    StrengthMovement strength("str_002", "Жим гантелей", 4, 12, 25.0);
+    
+    // Доступ к protected полю базового класса BaseEntity через метод производного класса
+    std::cout << "  Имя (из protected поля BaseEntity::m_name): " << strength.getTitle() << std::endl;
+    std::cout << "  ID (из protected поля BaseEntity::m_id): " << strength.getCode() << std::endl;
+    
+    // Использование метода, который работает с protected полями
+    strength.updateName("Жим гантелей (обновлено)");
+    std::cout << "  После updateName (использует protected поля): " << strength.getTitle() << std::endl;
+    
+    // Доступ к protected полям Exercisable
+    std::cout << "  Длительность (из protected поля Exercisable::m_durationMinutes): " 
+              << strength.getDuration() << " минут" << std::endl;
+}
+
+void demonstrateMethodOverriding()
+{
+    AthleteAccount athlete("acc022", "Тестовый", GoalCode::eBulk);
+    athlete.addGear("barbell");
+    
+    StrengthMovement strength("str_003", "Становая тяга", 5, 5, 120.0);
+    strength.addGearNeed("barbell");
+    
+    CardioMovement cardio("card_002", "Велотренажер", 10.0, 20.0);
+    
+    // Демонстрация переопределения getEstimatedCalories - С вызовом базового
+    std::cout << "  StrengthMovement::getEstimatedCalories() (с вызовом базового Exercisable::getEstimatedCalories):" << std::endl;
+    std::cout << "    " << strength.getEstimatedCalories() << " ккал" << std::endl;
+    
+    // Демонстрация переопределения getEstimatedCalories - БЕЗ вызова базового
+    std::cout << "  CardioMovement::getEstimatedCalories() (без вызова базового):" << std::endl;
+    std::cout << "    " << cardio.getEstimatedCalories() << " ккал" << std::endl;
+    
+    // Демонстрация getDescription - С вызовом базового
+    std::cout << "  StrengthMovement::getDescription() (с вызовом базового Movement::getDescription):" << std::endl;
+    std::cout << "    " << strength.getDescription() << std::endl;
+    
+    // Демонстрация getDescription - БЕЗ вызова базового
+    std::cout << "  CardioMovement::getDescription() (без вызова базового):" << std::endl;
+    std::cout << "    " << cardio.getDescription() << std::endl;
+    
+    // Новый метод без вызова базового
+    std::cout << "  StrengthMovement::getWorkoutDetails() (новый метод, без базового):" << std::endl;
+    std::cout << "    " << strength.getWorkoutDetails() << std::endl;
+}
+
+void demonstrateVirtualFunctions()
+{
+    AthleteAccount athlete("acc020", "Тестовый спортсмен", GoalCode::eBulk);
+    athlete.addGear("barbell");
+    athlete.addGear("dumbbells");
+    
+    StrengthMovement strength("str_004", "Жим лежа", 3, 8, 80.0);
+    strength.addGearNeed("barbell");
+    
+    CardioMovement cardio("card_003", "Плавание", 1.5, 3.0);
+    
+    // Демонстрация полиморфизма через указатели на базовый класс
+    std::cout << "  Полиморфизм через указатели на базовый класс Exercisable:" << std::endl;
+    Exercisable* ex1 = &strength;
+    Exercisable* ex2 = &cardio;
+    
+    std::cout << "    StrengthMovement через Exercisable*::canPerform(): " 
+              << (ex1->canPerform(athlete) ? "можно выполнить" : "нельзя выполнить") << std::endl;
+    std::cout << "    CardioMovement через Exercisable*::canPerform(): " 
+              << (ex2->canPerform(athlete) ? "можно выполнить" : "нельзя выполнить") << std::endl;
+    
+    // Демонстрация виртуальной функции getInstructions
+    std::cout << "    Инструкции через Exercisable* (виртуальная функция):" << std::endl;
+    std::cout << "      Strength: " << ex1->getInstructions() << std::endl;
+    std::cout << "      Cardio: " << ex2->getInstructions() << std::endl;
+    
+    // Демонстрация виртуальной функции getEstimatedCalories
+    std::cout << "    Калории через Exercisable* (виртуальная функция):" << std::endl;
+    std::cout << "      Strength: " << ex1->getEstimatedCalories() << " ккал" << std::endl;
+    std::cout << "      Cardio: " << ex2->getEstimatedCalories() << " ккал" << std::endl;
+    
+    // Демонстрация присваивания указателя
+    Exercisable* ex3 = ex1;
+    std::cout << "    После присваивания указателя: " << ex3->getInstructions() << std::endl;
+    
+    // Демонстрация через указатель на Movement (базовый класс Movement)
+    std::cout << "  Полиморфизм через указатели на базовый класс Movement:" << std::endl;
+    Movement* mov1 = &strength;
+    Movement* mov2 = &cardio;
+    
+    std::cout << "    StrengthMovement через Movement*::getDescription(): " 
+              << mov1->getDescription() << std::endl;
+    std::cout << "    CardioMovement через Movement*::getDescription(): " 
+              << mov2->getDescription() << std::endl;
+    
+    // Демонстрация разницы: если бы getDescription не был виртуальным
+    std::cout << "  Если бы getDescription не был виртуальным, вызывался бы метод базового класса" << std::endl;
+}
+
+void demonstrateCloning()
+{
+    // Создаем Movement для обертки
+    auto originalMovement = std::make_shared<Movement>("str_005", "Приседания", "strength");
+    originalMovement->setDifficultyBand(1);
+    originalMovement->addTarget("quads");
+    
+    ClonableMovementWrapper original(originalMovement);
+    
+    std::cout << "  Оригинальный объект:" << std::endl;
+    std::cout << "    " << original.getMovement()->getTitle() << std::endl;
+    std::cout << "    Сложность: " << original.getMovement()->getDifficultyBand() << std::endl;
+    
+    // Глубокое клонирование - создает новый объект Movement
+    auto deepClone = original.clone();
+    std::cout << "  Глубокое клонирование (через clone()):" << std::endl;
+    auto deepWrapper = dynamic_cast<ClonableMovementWrapper*>(deepClone.get());
+    if (deepWrapper)
+    {
+        std::cout << "    " << deepWrapper->getMovement()->getTitle() << std::endl;
+        // Изменение клона не влияет на оригинал
+        deepWrapper->getMovement()->setDifficultyBand(2);
+        std::cout << "    После изменения клона - оригинал: " 
+                  << original.getMovement()->getDifficultyBand() 
+                  << ", клон: " << deepWrapper->getMovement()->getDifficultyBand() << std::endl;
+    }
+    
+    // Поверхностное клонирование - разделяет shared_ptr
+    auto shallowClone = original.shallowClone();
+    std::cout << "  Поверхностное клонирование (через shallowClone()):" << std::endl;
+    auto shallowWrapper = dynamic_cast<ClonableMovementWrapper*>(shallowClone);
+    if (shallowWrapper)
+    {
+        std::cout << "    " << shallowWrapper->getMovement()->getTitle() << std::endl;
+        // Изменение клона влияет на оригинал (разделяют один объект)
+        shallowWrapper->getMovement()->setDifficultyBand(3);
+        std::cout << "    После изменения клона - оригинал: " 
+                  << original.getMovement()->getDifficultyBand() 
+                  << ", клон: " << shallowWrapper->getMovement()->getDifficultyBand() << std::endl;
+        std::cout << "    (Оба указывают на один объект - поверхностное копирование)" << std::endl;
+    }
+    
+    delete shallowClone;
+}
+
+void demonstrateAbstractClass()
+{
+    // Нельзя создать объект абстрактного класса напрямую
+    // Exercisable ex("test", 10); // Ошибка компиляции - класс абстрактный
+    
+    std::cout << "  Абстрактный класс Exercisable нельзя инстанцировать напрямую" << std::endl;
+    std::cout << "  (содержит чисто виртуальные методы canPerform и getInstructions)" << std::endl;
+    std::cout << "  Можно использовать только через производные классы:" << std::endl;
+    
+    AthleteAccount athlete("acc023", "Тестовый", GoalCode::eBulk);
+    athlete.addGear("pullup_bar");
+    
+    StrengthMovement strength("str_006", "Подтягивания", 3, 10, 0.0);
+    strength.addGearNeed("pullup_bar");
+    
+    CardioMovement cardio("card_004", "Бег на дорожке", 5.0, 12.0);
+    
+    // Использование через указатель на абстрактный класс
+    Exercisable* exercises[] = {&strength, &cardio};
+    
+    for (int i = 0; i < 2; i++)
+    {
+        std::cout << "    Упражнение " << (i + 1) << ": " << exercises[i]->getName() << std::endl;
+        std::cout << "      Инструкции (чисто виртуальный метод): " 
+                  << exercises[i]->getInstructions() << std::endl;
+        std::cout << "      Можно выполнить: " 
+                  << (exercises[i]->canPerform(athlete) ? "да" : "нет") << std::endl;
+        std::cout << "      Калории (виртуальный метод): " 
+                  << exercises[i]->getEstimatedCalories() << " ккал" << std::endl;
+    }
+}
+
+void demonstrateVirtualDestructor()
+{
+    std::cout << "  Демонстрация виртуального деструктора:" << std::endl;
+    
+    // Создание объектов через указатели на базовый класс
+    Exercisable* ex1 = new StrengthMovement("str_007", "Жим", 3, 8, 80.0);
+    Exercisable* ex2 = new CardioMovement("card_005", "Прыжки", 2.0, 8.0);
+    
+    std::cout << "    Созданы объекты через Exercisable*" << std::endl;
+    std::cout << "    " << ex1->getName() << std::endl;
+    std::cout << "    " << ex2->getName() << std::endl;
+    
+    // Удаление через указатель на базовый класс
+    // Благодаря виртуальному деструктору вызываются правильные деструкторы
+    std::cout << "    Удаление через указатель на базовый класс..." << std::endl;
+    delete ex1; // Вызовется деструктор StrengthMovement, затем Exercisable
+    delete ex2; // Вызовется деструктор CardioMovement, затем Exercisable
+    
+    // Демонстрация с TrainingSession (виртуальный деструктор)
+    std::cout << "  Демонстрация виртуального деструктора для TrainingSession:" << std::endl;
+    TrainingSession* session = new AdvancedTrainingSession("adv_001", "Продвинутая сессия", "Тренер Иван");
+    std::cout << "    Создан AdvancedTrainingSession через TrainingSession*" << std::endl;
+    std::cout << "    Удаление через указатель на базовый класс..." << std::endl;
+    delete session; // Вызовется деструктор AdvancedTrainingSession, затем TrainingSession
+    std::cout << "    Виртуальный деструктор гарантирует правильное освобождение ресурсов" << std::endl;
+}
+
+void demonstrateNonCopyable()
+{
+    std::cout << "  Класс с запрещенным конструктором копирования:" << std::endl;
+    
+    NonCopyableSession session1("sess_nc_001", "Уникальная сессия 1");
+    std::cout << "    Создан объект: " << session1.getTitle() 
+              << " (ID: " << session1.getSessionId() << ")" << std::endl;
+    
+    NonCopyableSession session2("sess_nc_002", "Уникальная сессия 2");
+    std::cout << "    Создан объект: " << session2.getTitle() 
+              << " (ID: " << session2.getSessionId() << ")" << std::endl;
+    
+    // Попытка копирования вызовет ошибку компиляции
+    // NonCopyableSession session3 = session1; // Ошибка: конструктор копирования удален
+    // session3 = session1; // Ошибка: оператор присваивания удален
+    
+    std::cout << "    Конструктор копирования запрещен (удален)" << std::endl;
+    std::cout << "    Оператор присваивания запрещен (удален)" << std::endl;
+    
+    // Но перемещение разрешено
+    NonCopyableSession session4 = std::move(session1);
+    std::cout << "    Перемещение разрешено: " << session4.getTitle() 
+              << " (ID: " << session4.getSessionId() << ")" << std::endl;
+}
+
+void demonstrateDerivedAssignment()
+{
+    std::cout << "  Перегрузка оператора присваивания для производного класса:" << std::endl;
+    
+    StrengthMovement strength("str_008", "Жим лежа", 3, 8, 90.0);
+    
+    std::cout << "    Оригинальный StrengthMovement:" << std::endl;
+    std::cout << "      " << strength.getTitle() << std::endl;
+    std::cout << "      Подходы: " << strength.getSets() 
+              << ", повторения: " << strength.getReps() << std::endl;
+    
+    // Создание объекта базового класса Movement
+    Movement base("base_001", "Базовое упражнение", "general");
+    base.setDifficultyBand(2);
+    
+    std::cout << "    Объект базового класса Movement:" << std::endl;
+    std::cout << "      " << base.getTitle() << ", сложность: " << base.getDifficultyBand() << std::endl;
+    
+    // Присваивание объекта базового класса производному классу
+    strength = base; // Использует operator=(const Movement&)
+    
+    std::cout << "    После присваивания Movement -> StrengthMovement:" << std::endl;
+    std::cout << "      " << strength.getTitle() << std::endl;
+    std::cout << "      Подходы (остались прежними): " << strength.getSets() << std::endl;
+    std::cout << "      Сложность (из базового класса): " << strength.getDifficultyBand() << std::endl;
 }
 
